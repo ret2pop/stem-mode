@@ -65,5 +65,16 @@
   (modify-syntax-entry ?\n "> b" stem-mode-syntax-table))
 
 
+(defun org-babel-execute:stem (body params)
+  "Execute a block of Nim code with org-babel."
+  (let ((in-file (org-babel-temp-file "n" ".stem"))
+        (verbosity (or (cdr (assq :verbosity params)) 0)))
+    (with-temp-file in-file
+      (insert body))
+    (org-babel-eval
+     (format "stem %s"
+             (org-babel-process-file-name in-file))
+     "")))
+
 (provide 'stem-mode)
 ;;; stem-mode.el ends here
